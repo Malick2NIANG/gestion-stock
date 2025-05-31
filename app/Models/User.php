@@ -41,5 +41,10 @@ class User extends Authenticatable
     {
         return $this->role === 'responsable';
     }
+    public function reapprovisionnements()
+    {
+        return $this->hasMany(Reapprovisionnement::class, 'gestionnaire_id');
+    }
+
 }
 

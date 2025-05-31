@@ -12,6 +12,7 @@ class Produit extends Model
         'nom_produit',
         'categorie',
         'prix_unitaire',
+        'prix_acquisition', // ✅ bien ajouté ici
         'quantite',
         'date_expiration'
     ];
@@ -43,5 +44,10 @@ class Produit extends Model
         $expires = self::whereDate('date_expiration', '<', $today)->count();
 
         return $rupture + $seuil + $bientotExpires + $expires;
+    }
+
+    public function reapprovisionnements()
+    {
+        return $this->hasMany(Reapprovisionnement::class);
     }
 }

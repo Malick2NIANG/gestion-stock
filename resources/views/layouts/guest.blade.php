@@ -16,6 +16,9 @@
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
     <!-- Vite (Laravel Mix Assets) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -52,5 +55,22 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script pour afficher / masquer le mot de passe -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', () => {
+                    const input = document.getElementById(button.getAttribute('data-target'));
+                    const icon = button.querySelector('i');
+                    const isPassword = input.type === 'password';
+
+                    input.type = isPassword ? 'text' : 'password';
+                    icon.classList.toggle('bi-eye', isPassword);
+                    icon.classList.toggle('bi-eye-slash', !isPassword);
+                });
+            });
+        });
+    </script>
 </body>
 </html>

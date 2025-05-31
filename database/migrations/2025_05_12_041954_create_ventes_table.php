@@ -10,10 +10,11 @@ return new class extends Migration {
         Schema::create('ventes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('produit_id')->constrained('produits')->onDelete('cascade');
-            $table->foreignId('vendeur_id')->constrained('users')->onDelete('cascade');
-            $table->unsignedInteger('quantite_vendue');
-            $table->dateTime('date_vente')->default(now());
-            $table->decimal('montant_total', 10, 2);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // 👤 Vendeur (user)
+            $table->unsignedInteger('quantite');                                     // 🧮 Quantité vendue
+            $table->decimal('prix_total', 10, 2);                                    // 💰 Montant total
+            $table->enum('mode_paiement', ['espèces', 'wave', 'orange money', 'carte']); // 💳 Paiement
+            $table->dateTime('date_vente')->default(now());                         // 📅 Date de la vente
             $table->timestamps();
         });
     }

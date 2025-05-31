@@ -22,13 +22,17 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+  public function store(LoginRequest $request): RedirectResponse
 {
     $request->authenticate();
-
     $request->session()->regenerate();
-        
 
+    // 🔐 Redirection obligatoire si mot de passe temporaire
+    if (auth()->user()->doit_changer_password) {
+        return redirect()->route('profile.password.edit')->with('warning', 'Veuillez modifier votre mot de passe avant de continuer.');
+    }
+
+    // 🎯 Redirection selon le rôle
     switch (auth()->user()->role) {
         case 'vendeur':
             return redirect()->route('vendeur.dashboard');
@@ -40,6 +44,7 @@ class AuthenticatedSessionController extends Controller
             abort(403);
     }
 }
+
 
 
     /**

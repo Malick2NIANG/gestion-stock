@@ -13,7 +13,11 @@ return new class extends Migration {
             $table->string('prenom');
             $table->string('email')->unique();
             $table->enum('role', ['vendeur', 'gestionnaire', 'responsable']);
+            $table->string('adresse')->nullable();             // ✅ Nouvelle colonne
+            $table->string('cni')->nullable();                 // ✅ Nouvelle colonne
             $table->string('password');
+            $table->boolean('password_modifie')->default(false);  // ✅ Nouvelle colonne
+            $table->string('password_defaut')->nullable();        // ✅ Nouvelle colonne
             $table->rememberToken();
             $table->timestamps();
         });

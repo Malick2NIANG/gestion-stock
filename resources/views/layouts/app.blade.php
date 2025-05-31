@@ -7,10 +7,10 @@
 
     <title>{{ config('app.name', 'Gestion Stock') }}</title>
 
-    <!-- Google Fonts -->
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap 5 CSS -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Animate.css -->
@@ -19,29 +19,20 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Vite (Laravel assets) -->
+    
+
+    <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         body {
             font-family: 'Figtree', sans-serif;
-            background: #f8f9fa;
-        }
-
-        nav.navbar {
-            position: relative;
-            z-index: 1000;
+            background-color: #f8f9fa;
         }
 
         header.bg-white.shadow {
             background: linear-gradient(90deg, #fdfdfd, #f3f4f6);
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            position: relative;
-            z-index: 1; /* pour rester en dessous des menus */
-        }
-
-        .dropdown-menu {
-            z-index: 1050 !important; /* Plus haut que header */
         }
 
         main {
@@ -62,9 +53,21 @@
     </style>
 </head>
 <body class="antialiased">
-    <div class="min-vh-100 d-flex flex-column bg-light">
-        <!-- Navigation -->
-        @include('layouts.navigation')
+    <div class="min-vh-100 d-flex flex-column">
+
+        <!-- Navigation selon rôle -->
+        @auth
+            @switch(Auth::user()->role)
+                @case('vendeur')
+                    @include('layouts.navigation-vendeur')
+                    @break
+                @case('responsable')
+                    @include('layouts.navigation-responsable')
+                    @break
+                @default
+                    @include('layouts.navigation') {{-- par défaut : gestionnaire --}}
+            @endswitch
+        @endauth
 
         <!-- Header -->
         @isset($header)
@@ -75,13 +78,15 @@
             </header>
         @endisset
 
-        <!-- Page Content -->
+        <!-- Main -->
         <main class="flex-fill container animate__animated animate__fadeInUp">
             {{ $slot }}
         </main>
     </div>
 
-    <!-- Bootstrap 5 JS -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    @stack('modals')
 </body>
 </html>

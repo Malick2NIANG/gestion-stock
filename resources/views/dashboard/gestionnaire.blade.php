@@ -63,8 +63,22 @@
                 </div>
             </div>
 
+            <!-- 🆕 Historique des modifications -->
+            <div class="col-md-6 col-lg-4 animate__animated animate__zoomIn">
+                <div class="card border-dark shadow h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title text-dark"><i class="bi bi-clock-history"></i> Historique des modifications</h5>
+                            <p class="card-text">Consultez toutes les modifications apportées aux produits (ajouts, suppressions, éditions).</p>
+                        </div>
+                        <a href="{{ route('modifications-stock.index') }}" class="btn btn-outline-dark mt-3">Voir l’historique</a>
+                    </div>
+                </div>
+            </div>
+
             <!-- Rapports -->
-            <div class="col-md-12 animate__animated animate__fadeInUp">
+
+            <div class="col-md-6 col-lg-4 animate__animated animate__zoomIn">
                 <div class="card border-secondary shadow h-100">
                     <div class="card-body d-flex flex-column justify-content-between">
                         <div>
@@ -75,6 +89,26 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Réapprovisionnement -->
+            <div class="col-md-6 col-lg-4 animate__animated animate__zoomIn">
+                <div class="card border-primary shadow h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title text-primary"><i class="bi bi-truck"></i> Réapprovisionnement</h5>
+                            <p class="card-text">Ajouter des quantités à un produit existant via la liste des produits.</p>
+                        </div>
+                        <div class="d-flex flex-column gap-2 mt-3">
+                            <a href="{{ route('reapprovisionnement.liste_produits') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-box-seam me-1"></i> Liste des produits à réapprovisionner
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
 
         </div>
     </div>

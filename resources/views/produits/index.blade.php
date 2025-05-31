@@ -1,80 +1,120 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Liste des produits') }}
-        </h2>
+        <div class="d-flex justify-content-between align-items-center animate__animated animate__fadeInDown">
+            <h2 class="fw-bold text-primary fs-4">
+                <i class="bi bi-box-seam me-2"></i> Liste des produits
+            </h2>
+            <div class="d-flex gap-2">
+                <a href="{{ route('produits.create') }}" class="btn btn-outline-success">
+                    <i class="bi bi-plus-circle"></i> Ajouter un produit
+                </a>
+                <a href="{{ route('gestionnaire.dashboard') }}" class="btn btn-outline-dark">
+                    <i class="bi bi-house-door"></i> Accueil
+                </a>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="container mt-5">
+    <div class="container mt-4 animate__animated animate__fadeInUp">
         @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+            </div>
         @endif
 
-        <!-- Barre de recherche -->
-        <form method="GET" action="{{ route('produits.index') }}" class="mb-4 d-flex">
-            <input type="text" name="search" class="form-control me-2" placeholder="Rechercher par nom ou code..." value="{{ request('search') }}">
-            <button type="submit" class="btn btn-primary">Rechercher</button>
-        </form>
+        <!-- Barre de recherche dynamique -->
+        <div class="mb-4 animate__animated animate__fadeIn">
+            <input type="text" id="searchProduit" class="form-control" placeholder="🔍 Rechercher un produit par nom ou code...">
+        </div>
 
-        <table class="table table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>Code</th>
-                    <th>Nom</th>
-                    <th>Catégorie</th>
-                    <th>Prix (F CFA)</th>
-                    <th>Quantité</th>
-                    <th>Expiration</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($produits as $produit)
+        <div class="table-responsive">
+            <table class="table table-hover align-middle" id="produitTable">
+                <thead class="table-dark">
                     <tr>
-                        <td>{{ $produit->code_produit }}</td>
-                        <td>{{ $produit->nom_produit }}</td>
-                        <td>{{ $produit->categorie }}</td>
-                        <td>{{ number_format($produit->prix_unitaire, 2) }}</td>
-                        <td>{{ $produit->quantite }}</td>
-                        <td>{{ $produit->date_expiration ?? 'N/A' }}</td>
-                        <td>
-                            <a href="{{ route('produits.edit', $produit) }}" class="btn btn-sm btn-warning">Modifier</a>
+                        <th>Code</th>
+                        <th>Nom</th>
+                        <th>Catégorie</th>
+                        <th>Prix vente (F CFA)</th>
+                        <th>Prix acquisition (F CFA)</th> <!-- ✅ AJOUTÉ -->
+                        <th>Quantité</th>
+                        <th>Expiration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($produits as $produit)
+                        <tr class="produit-row">
+                            <td>{{ $produit->code_produit }}</td>
+                            <td class="produit-nom">{{ $produit->nom_produit }}</td>
+                            <td>{{ $produit->categorie }}</td>
+                            <td>{{ number_format($produit->prix_unitaire, 2) }}</td>
+                            <td>{{ number_format($produit->prix_acquisition, 2) }}</td> <!-- ✅ AJOUTÉ -->
+                            <td>{{ $produit->quantite }}</td>
+                            <td>{{ $produit->date_expiration ?? 'N/A' }}</td>
+                            <td>
+                                <a href="{{ route('produits.edit', $produit) }}" class="btn btn-sm btn-outline-warning me-1">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
 
-                            <!-- Bouton qui déclenche la modale -->
-                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $produit->id }}">
-                                Supprimer
-                            </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $produit->id }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
 
-                            <!-- Modale Bootstrap -->
-                            <div class="modal fade" id="confirmDeleteModal{{ $produit->id }}" tabindex="-1" aria-labelledby="confirmDeleteLabel{{ $produit->id }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-danger text-white">
-                                            <h5 class="modal-title" id="confirmDeleteLabel{{ $produit->id }}">Confirmation de suppression</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Êtes-vous sûr de vouloir supprimer le produit <strong>{{ $produit->nom_produit }}</strong> ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-
-                                            <form action="{{ route('produits.destroy', $produit) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Oui, supprimer</button>
-                                            </form>
+                                @push('modals')
+                                <div class="modal fade"
+                                     id="deleteModal{{ $produit->id }}"
+                                     tabindex="-1"
+                                     aria-labelledby="deleteModalLabel{{ $produit->id }}"
+                                     aria-hidden="true"
+                                     data-bs-backdrop="false">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ $produit->id }}">Confirmer la suppression</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Êtes-vous sûr de vouloir supprimer <strong>{{ $produit->nom_produit }}</strong> ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                <form action="{{ route('produits.destroy', $produit) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                                @endpush
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- JS Bootstrap (si ce n'est pas déjà dans le layout principal) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @stack('modals')
+
+    <!-- Script JS de recherche dynamique -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchProduit');
+            const rows = document.querySelectorAll('.produit-row');
+
+            searchInput.addEventListener('input', () => {
+                const term = searchInput.value.toLowerCase();
+
+                rows.forEach(row => {
+                    const code = row.children[0].textContent.toLowerCase();
+                    const nom = row.querySelector('.produit-nom').textContent.toLowerCase();
+                    const match = code.includes(term) || nom.includes(term);
+                    row.style.display = match ? '' : 'none';
+                });
+            });
+        });
+    </script>
 </x-app-layout>

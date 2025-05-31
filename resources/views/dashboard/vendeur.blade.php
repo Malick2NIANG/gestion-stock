@@ -1,28 +1,45 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Tableau de bord - Vendeur') }}
+            {{ __('Espace Vendeur') }}
         </h2>
     </x-slot>
 
-    <div class="container py-12">
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Nouvelle vente</h5>
-                        <p class="card-text">Saisissez une vente en sélectionnant un produit et la quantité vendue.</p>
-                        <a href="#" class="btn btn-primary">Effectuer une vente</a>
+    <div class="container py-5">
+        <!-- En-tête de bienvenue -->
+        <div class="text-center mb-5 animate__animated animate__fadeInDown">
+            <h1 class="display-5 fw-bold">Bienvenue dans votre espace de vente</h1>
+            <p class="lead">Effectuez, gérez et consultez vos ventes rapidement et efficacement.</p>
+        </div>
+
+        <!-- Centrage des cartes -->
+        <div class="row g-4 justify-content-center">
+            <!-- Effectuer une vente -->
+            <div class="col-md-6 col-lg-4 animate__animated animate__zoomIn">
+                <div class="card border-primary shadow h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title text-primary">
+                                <i class="bi bi-cash-coin"></i> Effectuer une vente
+                            </h5>
+                            <p class="card-text">Sélectionnez des produits, définissez les quantités et finalisez la vente.</p>
+                        </div>
+                        <a href="{{ route('vente.create') }}" class="btn btn-outline-primary mt-3">Nouvelle vente</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Historique des ventes</h5>
-                        <p class="card-text">Consultez la liste de vos ventes précédentes.</p>
-                        <a href="#" class="btn btn-outline-secondary">Voir l'historique</a>
+            <!-- Historique des ventes -->
+            <div class="col-md-6 col-lg-4 animate__animated animate__zoomIn">
+                <div class="card border-info shadow h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title text-success">
+                                <i class="bi bi-clock-history"></i> Historique des ventes
+                            </h5>
+                            <p class="card-text">Recherchez vos anciennes ventes par date et exportez les rapports.</p>
+                        </div>
+                        <a href="{{ route('vente.historique') }}" class="btn btn-outline-success mt-3">Consulter</a>
                     </div>
                 </div>
             </div>
