@@ -91,6 +91,99 @@
                 </div>
             </div>
         </div>
+        <!-- Graphiques Inventaire Périodique -->
+<div class="row g-4 mt-5">
+
+    <!-- Camembert Répartition Bilan -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">Répartition des Valeurs (Période)</div>
+            <div class="card-body">
+                <canvas id="bilanPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barres Valeurs Inventaire -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">Comparaison Valeurs (Période)</div>
+            <div class="card-body">
+                <canvas id="bilanBarChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Script des graphiques -->
+<script>
+    // Camembert Répartition des valeurs
+    new Chart(document.getElementById('bilanPieChart'), {
+        type: 'pie',
+        data: {
+            labels: [
+                'Montant ventes',
+                'Coût acquisition',
+                'Bénéfice net',
+                'Pertes (expirés)'
+            ],
+            datasets: [{
+                data: [
+                    {{ $montantTotalVentes }},
+                    {{ $coutAcquisitionVentes }},
+                    {{ $beneficeNet }},
+                    {{ $valeurPertes }}
+                ],
+                backgroundColor: [
+                    '#28a745', // ventes
+                    '#007bff', // acquisition
+                    '#ffc107', // bénéfice
+                    '#dc3545'  // pertes
+                ]
+            }]
+        }
+    });
+
+    // Barres Comparaison Valeurs
+    new Chart(document.getElementById('bilanBarChart'), {
+        type: 'bar',
+        data: {
+            labels: [
+                'Montant ventes',
+                'Coût acquisition',
+                'Bénéfice net',
+                'Pertes (expirés)'
+            ],
+            datasets: [{
+                label: 'Montants (F CFA)',
+                data: [
+                    {{ $montantTotalVentes }},
+                    {{ $coutAcquisitionVentes }},
+                    {{ $beneficeNet }},
+                    {{ $valeurPertes }}
+                ],
+                backgroundColor: [
+                    '#28a745',
+                    '#007bff',
+                    '#ffc107',
+                    '#dc3545'
+                ]
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
 
     </div>
 </x-app-layout>
